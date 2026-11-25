@@ -2,7 +2,7 @@
   "hero": {
     "eyebrow": "Atlanta, GA · Welcome in",
     "name": "Jenifer Nguyen",
-    "intro": "Data scientist with a fascination for AI safety. This is my world: it’s built from the things I care about, from making models explain themselves to making hard ideas feel simple.",
+    "intro": "Computer science graduate student with a fascination for data science and AI safety. This is my world: it’s built from the things I care about, from making models explain themselves to making hard ideas feel simple.",
     "enterButton": "Step inside",
     "contactButton": "Get in touch"
   },
@@ -12,7 +12,7 @@
     "rows": [
       {
         "label": "Role",
-        "value": "Data scientist focused on AI safety and interpretability"
+        "value": "Graduate student focused on data science, AI safety and interpretability"
       },
       {
         "label": "Education",
