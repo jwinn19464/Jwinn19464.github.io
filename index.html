@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jenifer's World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=Chakra+Petch:wght@600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hud">
+  <div class="wrap">
+    <span class="logo">JENIFER’S WORLD</span>
+    <div class="xp game-only" title="Achievements unlocked"><span class="xp-label">XP</span><div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div></div>
+    <button class="hbtn game-only" id="trophyBtn" aria-expanded="false" aria-controls="trophyList">★ <span id="trophyCount">0</span>/<span id="trophyTotal">10</span></button>
+    <button class="hbtn" id="themeBtn" aria-label="Switch light or dark mode">◐ Light</button>
+    <button class="hbtn solid" id="modeBtn" aria-pressed="false">Plain mode</button>
+  </div>
+</header>
+<ol class="trophy-list game-only" id="trophyList" hidden></ol>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="entrance cut">
+        <p class="tonight" data-edit="hero.eyebrow"></p>
+        <h1 class="name" id="siteName" data-edit="hero.name"></h1>
+        <p class="billing" data-edit="hero.intro"></p>
+        <div class="cta">
+          <a class="btn" href="#world" data-edit="hero.enterButton"></a>
+          <a class="btn ghost" href="#world" data-open="contact" data-edit="hero.contactButton"></a>
+        </div>
+      </div>
+
+      <div class="panel sheet game-only cut">
+        <button class="portrait" id="portrait" disabled aria-label="Portrait"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/></svg></button>
+        <h3 data-edit="profile.title"></h3>
+        <dl id="profileRows"></dl>
+      </div>
+
+      <div class="panel resume plain-only cut">
+        <h3 data-edit="resume.title"></h3>
+        <p><strong data-edit="hero.name"></strong></p>
+        <ul id="resumeLines"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="act" id="world">
+    <div class="wrap">
+      <div class="act-head"><span class="act-no" data-edit="world.eyebrow"></span><h2 data-edit="world.heading"></h2></div>
+      <p class="lede" data-edit="world.intro"></p>
+      <div class="mframe cut" id="mframe"></div>
+    </div>
+  </section>
+</main>
+
+<footer><span data-edit="footer"></span> <span class="game-only">↑ ↑ ↓ ↓ ← → ← → B A for a surprise.</span></footer>
+
+<div class="toast" id="toast" role="status"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script src="main.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

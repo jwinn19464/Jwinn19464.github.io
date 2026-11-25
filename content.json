@@ -1,0 +1,513 @@
+{
+  "hero": {
+    "eyebrow": "Atlanta, GA · Welcome in",
+    "name": "Jenifer Nguyen",
+    "intro": "Data scientist with a fascination for AI safety. This is my world: it’s built from the things I care about, from making models explain themselves to making hard ideas feel simple.",
+    "enterButton": "Step inside",
+    "contactButton": "Get in touch"
+  },
+  "profile": {
+    "title": "Profile",
+    "photo": "",
+    "rows": [
+      {
+        "label": "Role",
+        "value": "Data scientist focused on AI safety and interpretability"
+      },
+      {
+        "label": "Education",
+        "value": "M.S. Computer Science, Georgia State University (December 2026)"
+      },
+      {
+        "label": "Seeking",
+        "value": "Data science and analytics roles"
+      },
+      {
+        "label": "Tools",
+        "value": "Python, PyTorch Geometric, Streamlit, React"
+      },
+      {
+        "label": "Languages",
+        "value": "English, Spanish"
+      },
+      {
+        "label": "Based in",
+        "value": "Atlanta, GA"
+      }
+    ]
+  },
+  "resume": {
+    "title": "The short version",
+    "lines": [
+      "M.S. Computer Science, Georgia State University (December 2026)",
+      "Published “Fragmentation-Based Hypergraph Attention Network for Molecular Classification Tasks,” Complex Networks and Their Applications 2025; Best Lightning Presentation Award",
+      "Global Data Analytics Intern, Equifax (Summer 2025)",
+      "Teaching Assistant, Mobile Computing & Wireless Network Security; Tech Fellow, CodePath",
+      "Computer Vision (CSc 8830): calibration, Fourier filtering, segmentation, optical flow and structure from motion, stereo; final project: Fridge Oracle",
+      "Interests: AI safety and interpretability, multi-agent systems, data science"
+    ]
+  },
+  "world": {
+    "eyebrow": "Explore",
+    "heading": "Step Through a Portal",
+    "intro": "I used to build PowerPoint museums, and this world works the same way. Portals lead to different areas, memories hold the stories, and any memory marked PLAY opens an app.",
+    "homeTitle": "Home Base",
+    "homeSub": "Pick a portal. Each one opens into a different part of my world.",
+    "homeColor": "#7b5cc9"
+  },
+  "areas": [
+    {
+      "id": "origins",
+      "door": "Where It Began",
+      "color": "#c4577a",
+      "title": "Where It Began",
+      "sub": "Tutoring, wandering, and a first look at AI.",
+      "memories": [
+        {
+          "title": "The Tutor",
+          "icon": "chalk",
+          "year": "",
+          "tools": "Patience, whiteboard markers",
+          "text": "Tutored kids from ages 4 to 18, then college students. If they’re confused, the explanation is the bug.",
+          "photo": ""
+        },
+        {
+          "title": "Mountain Classroom",
+          "icon": "mtn",
+          "year": "",
+          "tools": "English, math, Spanish",
+          "text": "Taught a week-long English and math summer camp, in Spanish, in the mountains of Cobán, Guatemala.",
+          "photo": ""
+        },
+        {
+          "title": "The Class Collector",
+          "icon": "book",
+          "year": "",
+          "tools": "Psychology, economics, anthropology, sociology, political science, languages",
+          "text": "A map of how people think, collected before learning how machines do.",
+          "photo": ""
+        },
+        {
+          "title": "First Contact",
+          "icon": "eye",
+          "year": "2022",
+          "tools": "A final project on AI manipulation and misinformation",
+          "text": "The course where the AI safety thread started, with one question: why did the model say that?",
+          "photo": ""
+        },
+        {
+          "title": "Tech Fellow",
+          "icon": "code",
+          "year": "",
+          "tools": "Mentoring, software engineering",
+          "text": "Helped other students level up as a Tech Fellow at CodePath.",
+          "photo": ""
+        },
+        {
+          "title": "The Consulting Desk",
+          "icon": "chat",
+          "year": "",
+          "tools": "Questions under questions",
+          "text": "I’ve consulted for people who needed someone to untangle a problem with them, sort out the data, and explain the answer so it sticks.",
+          "note": "[Add who you consulted for and one or two problems you solved.]",
+          "photo": ""
+        },
+        {
+          "title": "Industry Interlude",
+          "icon": "bars",
+          "year": "Summer 2025",
+          "tools": "Data analytics at enterprise scale",
+          "text": "Global Data Analytics Intern at Equifax in Alpharetta, GA.",
+          "photo": ""
+        },
+        {
+          "title": "The Game-Show Host",
+          "icon": "star",
+          "year": "Fall 2026",
+          "tools": "Grading, feedback, one Kahoot",
+          "text": "TA for Mobile Computing and Wireless Network Security, with a game-show midterm review.",
+          "photo": ""
+        },
+        {
+          "title": "Next Level",
+          "icon": "flag",
+          "year": "Dec 2026",
+          "tools": "M.S. Computer Science, Georgia State",
+          "text": "Graduating and looking for data science and analytics roles, or an AI safety lab. Player 2 may join.",
+          "link": {
+            "text": "Get in touch →",
+            "href": "",
+            "openArea": "contact"
+          },
+          "photo": ""
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "door": "The Observatory",
+      "color": "#3f63b5",
+      "title": "The Observatory",
+      "sub": "Molecules, hypergraphs, and agents that should explain themselves.",
+      "memories": [
+        {
+          "title": "First Paper, First Award",
+          "icon": "hex",
+          "year": "2025",
+          "tools": "Hypergraph attention, molecular fragments",
+          "text": "“Fragmentation-Based Hypergraph Attention Network for Molecular Classification Tasks,” Complex Networks and Their Applications 2025. Winner of the Best Lightning Presentation Award. Grew out of an REU with my lab partner and advisors.",
+          "link": {
+            "text": "Read it on Google Scholar",
+            "href": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=mhEbP0IAAAAJ&citation_for_view=mhEbP0IAAAAJ:u5HHmVD_uO8C",
+            "openArea": ""
+          },
+          "photo": ""
+        },
+        {
+          "title": "Readable Fragments",
+          "icon": "eye",
+          "year": "In progress",
+          "tools": "Interpretability, chemistry",
+          "text": "Interpretable molecule fragmentation: making the pieces a model reasons over line up with chemistry people understand.",
+          "photo": ""
+        },
+        {
+          "title": "Two Ways of Seeing a Molecule",
+          "icon": "graph",
+          "year": "In progress",
+          "tools": "Chemical language models, hypergraphs",
+          "text": "Multimodal property prediction that aligns language model embeddings with fragment hypergraphs, piece by piece.",
+          "photo": ""
+        },
+        {
+          "title": "The Key-Trading Game",
+          "icon": "key",
+          "year": "Nov 2026",
+          "tools": "Twenty-plus LLM agents, one lying “God”",
+          "text": "A multi-agent safety sandbox: agents trade or defect over keys while an adversary forges messages. Who leads, who trusts, and can they explain why?",
+          "app": "keygame",
+          "photo": ""
+        }
+      ]
+    },
+    {
+      "id": "vision",
+      "door": "The Prism",
+      "color": "#1f8a8a",
+      "title": "The Prism",
+      "sub": "Computer vision (CSc 8830): five modules in one Streamlit portal.",
+      "memories": [
+        {
+          "title": "The Portal",
+          "icon": "door",
+          "year": "",
+          "tools": "Python, Streamlit",
+          "text": "One landing page, one page per module, separate code folders. Each module ships with a theory write-up and a check script tested on synthetic data with known answers.",
+          "live": "portal",
+          "photo": "",
+          "link": {
+            "text": "Code on GitHub",
+            "href": "https://github.com/jwinn19464",
+            "openArea": ""
+          }
+        },
+        {
+          "title": "Module 2: Measure",
+          "icon": "cal",
+          "year": "",
+          "tools": "Checkerboard calibration, perspective projection",
+          "text": "Real-world dimensions from a single photo, validated across a set of measured objects, plus how two cameras relate.",
+          "app": "measure",
+          "live": "portal",
+          "photo": ""
+        },
+        {
+          "title": "Module 3: Blur",
+          "icon": "sigma",
+          "year": "",
+          "tools": "Spatial convolution, the FFT",
+          "text": "Blurring two ways, written from scratch and shown to match. Drag the sliders.",
+          "app": "blur",
+          "live": "portal",
+          "photo": ""
+        },
+        {
+          "title": "Module 4: Find the Human",
+          "icon": "eye",
+          "year": "",
+          "tools": "Watershed, colour novelty, Fourier edges",
+          "text": "Classical segmentation with no deep learning, benchmarked against SAM2 with IoU, Dice and boundary scores.",
+          "app": "segment",
+          "live": "portal",
+          "photo": ""
+        },
+        {
+          "title": "Module 6: Motion",
+          "icon": "graph",
+          "year": "",
+          "tools": "Optical flow, Lucas-Kanade, structure from motion",
+          "text": "Dense flow, a tracker written from scratch, and a 3D reconstruction with bundle adjustment.",
+          "live": "portal",
+          "photo": ""
+        },
+        {
+          "title": "Module 7: Stereo",
+          "icon": "mtn",
+          "year": "",
+          "tools": "Two calibrated cameras",
+          "text": "Depth from two views, all the way up to measuring a room.",
+          "live": "portal",
+          "photo": ""
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "door": "The Kitchen",
+      "color": "#c0702a",
+      "title": "The Kitchen",
+      "sub": "For a foodie who can never decide what to make.",
+      "memories": [
+        {
+          "title": "Fridge Oracle",
+          "icon": "bun",
+          "year": "Final project, in progress",
+          "tools": "Optical flow, segmentation, tracking, deblurring, OCR, stereo depth, a ranking model",
+          "text": "A computer vision pipeline that turns a short video of a fridge or pantry into a dated inventory and a cooking plan. It picks usable keyframes, segments and tracks each item so nothing is counted twice, reads the printed expiration dates with OCR, and estimates how much of each item is left. Recipes are then ranked by how much soon-to-expire food they use up, and anything past its date is flagged.",
+          "app": "fridge",
+          "live": "fridge",
+          "list": [
+            "Keyframes (Modules 3 + 6): optical flow drops redundant frames from the sweep; a Fourier-domain sharpness score rejects motion-blurred ones",
+            "Items (Modules 4 + 6): classical segmentation separates each item from the shelf, checked against SAM2; Lucas-Kanade tracking links the same item across frames",
+            "Dates (Module 3 + OCR): date stamps are located, deconvolved to undo blur, read with OCR, and parsed across formats like “BEST BY 12/04” and “EXP 04DEC26”",
+            "Quantity (Modules 2 + 7): a known-size reference sets metric scale, and stereo depth finds items hidden behind others and estimates fill levels",
+            "Planning: items get an urgency score from days left, and recipes are ranked by how much urgent food they use while needing the fewest extra purchases"
+          ],
+          "photo": ""
+        },
+        {
+          "title": "DealDish",
+          "icon": "cart",
+          "year": "In progress",
+          "tools": "Kroger API, Spoonacular, an LLM, FastAPI",
+          "text": "Tracks grocery deals and turns them into recipes, with a tested Python pricing engine.",
+          "app": "dealdish",
+          "live": "dealdish",
+          "photo": ""
+        }
+      ]
+    },
+    {
+      "id": "workshop",
+      "door": "The Playground",
+      "color": "#5f8a1f",
+      "title": "The Playground",
+      "sub": "Learning tools that feel like games.",
+      "memories": [
+        {
+          "title": "DerivativeLab",
+          "icon": "sigma",
+          "year": "",
+          "tools": "React, TypeScript, calculus",
+          "text": "Drag a curve and watch its derivative respond.",
+          "app": "derivative",
+          "live": "derivativelab",
+          "photo": ""
+        },
+        {
+          "title": "CS Adventure",
+          "icon": "game",
+          "year": "In progress",
+          "tools": "A platformer that teaches",
+          "text": "Jump, learn computer science, repeat. Each coin is a concept.",
+          "app": "platformer",
+          "live": "platformer",
+          "photo": ""
+        }
+      ]
+    },
+    {
+      "id": "vault",
+      "door": "Inventory",
+      "color": "#6a4bb0",
+      "title": "Inventory",
+      "sub": "Equipped items, and where I’ve used them.",
+      "memories": [
+        {
+          "title": "Python",
+          "icon": "code",
+          "year": "",
+          "tools": "Used in: research, the vision modules, DealDish",
+          "text": "The wand. Most spells start here.",
+          "photo": ""
+        },
+        {
+          "title": "PyTorch Geometric",
+          "icon": "graph",
+          "year": "",
+          "tools": "Used in: the published paper, multimodal molecules",
+          "text": "Neural networks that think in graphs and hypergraphs.",
+          "photo": ""
+        },
+        {
+          "title": "Cheminformatics",
+          "icon": "hex",
+          "year": "",
+          "tools": "Used in: fragmentation research",
+          "text": "BRICS, RECAP, scaffolds, junction trees: many ways to cut a molecule.",
+          "photo": ""
+        },
+        {
+          "title": "Interpretability",
+          "icon": "eye",
+          "year": "",
+          "tools": "Used in: readable fragments, the key-trading game",
+          "text": "Asks a model why, and keeps asking.",
+          "photo": ""
+        },
+        {
+          "title": "LLM Agents",
+          "icon": "key",
+          "year": "",
+          "tools": "Used in: the key-trading game",
+          "text": "Summons small swarms. Handle with alignment.",
+          "photo": ""
+        },
+        {
+          "title": "Data Analytics",
+          "icon": "bars",
+          "year": "",
+          "tools": "Used in: the Equifax internship, DealDish",
+          "text": "Turns rows into decisions. Field-tested at enterprise scale.",
+          "photo": ""
+        },
+        {
+          "title": "Computer Vision",
+          "icon": "mtn",
+          "year": "",
+          "tools": "Used in: CSc 8830, Fridge Oracle",
+          "text": "Reads the date on your yogurt. Judges gently.",
+          "photo": ""
+        },
+        {
+          "title": "React + TypeScript",
+          "icon": "code",
+          "year": "",
+          "tools": "Used in: DerivativeLab",
+          "text": "Builds the shop where the other items are sold.",
+          "photo": ""
+        },
+        {
+          "title": "Explaining Things",
+          "icon": "chalk",
+          "year": "",
+          "tools": "Used in: tutoring, TA work, this website",
+          "text": "+50% to everyone else’s understanding. Stacks.",
+          "photo": ""
+        },
+        {
+          "title": "Spanish",
+          "icon": "hola",
+          "year": "",
+          "tools": "Used in: a summer camp in Cobán, Guatemala",
+          "text": "Unlocks classrooms in the mountains of Guatemala.",
+          "photo": ""
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "door": "The Music Room",
+      "color": "#b0428f",
+      "title": "The Music Room",
+      "sub": "Rehearsal: the same eight bars badly, then slightly less badly.",
+      "memories": [
+        {
+          "title": "Choral Union",
+          "icon": "mic",
+          "year": "",
+          "tools": "Voice, many other voices",
+          "text": "I sing with the Choral Union.",
+          "photo": ""
+        },
+        {
+          "title": "Piano Lessons",
+          "icon": "note",
+          "year": "",
+          "tools": "Piano, weekly persistence",
+          "text": "Weekly lessons, piano books in tow.",
+          "photo": ""
+        },
+        {
+          "title": "Play Something",
+          "icon": "keys",
+          "year": "Now",
+          "tools": "You, a keyboard",
+          "text": "Go ahead:",
+          "widget": "piano",
+          "photo": ""
+        }
+      ]
+    },
+    {
+      "id": "backstage",
+      "door": "The Journal",
+      "color": "#3d7fa8",
+      "title": "The Journal",
+      "sub": "Blog posts in progress.",
+      "memories": [
+        {
+          "title": "Trust in Agent Swarms",
+          "icon": "pen",
+          "year": "",
+          "tools": "Draft · AI safety",
+          "text": "What a lying “God” agent taught me about trust: forged messages, betrayed trades, and which agents could explain themselves.",
+          "photo": ""
+        },
+        {
+          "title": "How You Cut a Molecule",
+          "icon": "pen",
+          "year": "",
+          "tools": "Draft · Research",
+          "text": "A friendly tour of fragmentation methods, and why the pieces matter for interpretability.",
+          "photo": ""
+        },
+        {
+          "title": "Math in Spanish on a Mountain",
+          "icon": "pen",
+          "year": "",
+          "tools": "Draft · Education",
+          "text": "What a week in Cobán taught me about explaining things across languages.",
+          "photo": ""
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "type": "contact",
+      "door": "Get in Touch",
+      "color": "#8a6ad0",
+      "title": "Get in Touch",
+      "sub": "Thanks for visiting my world."
+    }
+  ],
+  "contact": {
+    "heading": "Let’s talk",
+    "text": "The easiest way to reach me is a message on LinkedIn.",
+    "button": "Message me on LinkedIn",
+    "url": ""
+  },
+  "live": {
+    "portal": "",
+    "dealdish": "",
+    "derivativelab": "",
+    "platformer": "",
+    "fridge": ""
+  },
+  "footer": "Built by Jenifer Nguyen.",
+  "admin": {
+    "owner": "jwinn19464",
+    "repo": "",
+    "branch": "main"
+  }
+}
