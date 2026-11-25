@@ -63,8 +63,10 @@
 
   /* ---------- Voice: speaker verification that runs in the browser ---------- */
   const VOICE={
-    threshold:0.86,           // Microsoft's suggested cut-off for this model; raise it to be stricter
-    phrase:'Open my world',
+    threshold:0.86,           // starting cut-off; enrollment replaces it with one tuned to your own voice and mic
+    minThreshold:0.72,        // never accept below this, however inconsistent the recordings were
+    phrase:'Open sesame!',
+    takes:5,
     proc:null,model:null,
     supported(){return !!(window.isSecureContext&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder)},
     saved(){try{return JSON.parse(local.get(KEYS.voice))}catch(e){return null}},
@@ -79,7 +81,7 @@
     /* Record a few seconds from the mic, drawing the waveform as you speak.
        Returns 16 kHz mono samples, which is what the model expects. */
     async record(seconds,canvas){
-      const stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true}});
+      const stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
       const AC=window.AudioContext||window.webkitAudioContext,ac=new AC();
       const an=ac.createAnalyser();an.fftSize=1024;ac.createMediaStreamSource(stream).connect(an);
       const rec=new MediaRecorder(stream),chunks=[];rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
@@ -102,17 +104,38 @@
       const samples=(await off.startRendering()).getChannelData(0);
       let peak=0;for(let i=0;i<samples.length;i++)peak=Math.max(peak,Math.abs(samples[i]));
       if(peak<0.02){const e=new Error('quiet');e.quiet=true;throw e}
-      return samples;
+      return this.trim(samples,peak);
+    },
+    /* Cut the silence before and after you speak, so the voiceprint is built from your voice, not the room */
+    trim(x,peak){
+      const win=320,gate=Math.max(0.01,peak*0.08);let a=0,b=x.length;
+      const loud=i=>{let s=0;for(let k=i;k<Math.min(i+win,x.length);k++)s+=x[k]*x[k];return Math.sqrt(s/win)>gate};
+      while(a<x.length&&!loud(a))a+=win;
+      while(b>a&&!loud(Math.max(a,b-win)))b-=win;
+      a=Math.max(0,a-1600);b=Math.min(x.length,b+1600);
+      return b-a>8000?x.slice(a,b):x;
     },
     async embed(samples){
       const inputs=await this.proc(samples);const out=await this.model(inputs);
       const v=Array.from((out.embeddings||out.logits).data);const n=Math.hypot(...v)||1;return v.map(x=>x/n);
     },
     similarity(a,b){let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s},
+    /* Save every take, and set your personal threshold from how closely your takes match each other */
     enroll(vectors){
-      const avg=vectors[0].map((_,i)=>vectors.reduce((s,v)=>s+v[i],0)/vectors.length);const n=Math.hypot(...avg)||1;
-      local.set(KEYS.voice,JSON.stringify({vector:avg.map(x=>x/n),phrase:this.phrase,at:Date.now()}));
+      const pairs=[];for(let i=0;i<vectors.length;i++)for(let j=i+1;j<vectors.length;j++)pairs.push(this.similarity(vectors[i],vectors[j]));
+      pairs.sort((a,b)=>a-b);const typical=pairs[Math.floor(pairs.length/2)];
+      const threshold=Math.max(this.minThreshold,Math.min(this.threshold,typical-0.04));
+      local.set(KEYS.voice,JSON.stringify({vectors,threshold,phrase:this.phrase,at:Date.now()}));
+      return threshold;
     },
+    /* Compare against each saved take and use the average of the two closest */
+    score(v){
+      const s=this.saved();if(!s)return 0;
+      const list=s.vectors||[s.vector];
+      const sims=list.map(u=>this.similarity(v,u)).sort((a,b)=>b-a);
+      return sims.length>1?(sims[0]+sims[1])/2:sims[0];
+    },
+    limit(){const s=this.saved();return s&&s.threshold?s.threshold:this.threshold},
     forget(){local.del(KEYS.voice)}
   };
 
@@ -137,11 +160,11 @@
   }
 
   function stepVoice(onPass){
-    const phrase=(VOICE.saved()||{}).phrase||VOICE.phrase;let fails=0;
+    const phrase=VOICE.phrase;let fails=0;
     show(`<p class="am-eyebrow">Step 1 of 2 · Voice</p><h3 id="amTitle">Say “${esc(phrase)}”</h3>
       <canvas class="am-wave" width="560" height="120" aria-hidden="true"></canvas>
       <div class="am-row"><button class="btn" data-act="listen" autofocus>Start listening</button><button class="btn ghost" data-act="skip">Use my token instead</button></div>
-      <p class="am-status" aria-live="polite">You’ll have 3 seconds.</p>`);
+      <p class="am-status" aria-live="polite">You’ll have 4 seconds. Hold your phone the way you did when you set it up.</p>`);
     body.onclick=async e=>{
       const act=e.target.closest('[data-act]')?.dataset.act;if(!act)return;
       if(act==='skip'){stepToken();return}
@@ -150,10 +173,10 @@
       try{
         await VOICE.load(say);
         say('Listening…');
-        const samples=await VOICE.record(3,body.querySelector('.am-wave'));
+        const samples=await VOICE.record(4,body.querySelector('.am-wave'));
         say('Checking your voice…');
-        const score=VOICE.similarity(await VOICE.embed(samples),VOICE.saved().vector);
-        if(score>=VOICE.threshold){say(`That’s you. Voice match ${Math.round(score*100)}%.`,'ok');setTimeout(onPass,700)}
+        const score=VOICE.score(await VOICE.embed(samples));
+        if(score>=VOICE.limit()){say(`That’s you. Voice match ${Math.round(score*100)}%.`,'ok');setTimeout(onPass,700)}
         else{fails++;say(fails>=3?'Voice didn’t match three times. Use your token to get in.':`That didn’t sound like you (match ${Math.round(score*100)}%). Try again.`,'bad');btn.disabled=fails>=3}
       }catch(err){
         btn.disabled=false;
@@ -203,9 +226,9 @@
   function stepEnroll(login){
     const takes=[];
     show(`<p class="am-eyebrow">Optional · Voice login</p><h3 id="amTitle">Set up your voice on this device?</h3>
-      <p class="am-text">You’ll say “${esc(VOICE.phrase)}” three times. Your voiceprint is saved in this browser only, never in your repository.</p>
+      <p class="am-text">You’ll say “${esc(VOICE.phrase)}” five times. Use your normal voice, in a quiet spot. Your voiceprint is saved in this browser only, never in your repository.</p>
       <canvas class="am-wave" width="560" height="120" aria-hidden="true"></canvas>
-      <div class="am-row"><button class="btn" data-act="take" autofocus>Record 1 of 3</button><button class="btn ghost" data-act="later">Not now</button></div>
+      <div class="am-row"><button class="btn" data-act="take" autofocus>Record 1 of 5</button><button class="btn ghost" data-act="later">Not now</button></div>
       <p class="am-status" aria-live="polite"></p>`);
     body.onclick=async e=>{
       const act=e.target.closest('[data-act]')?.dataset.act;if(!act)return;
@@ -213,9 +236,9 @@
       const btn=e.target.closest('button');btn.disabled=true;
       try{
         await VOICE.load(say);say('Listening…');
-        takes.push(await VOICE.embed(await VOICE.record(3,body.querySelector('.am-wave'))));
-        if(takes.length<3){btn.textContent=`Record ${takes.length+1} of 3`;btn.disabled=false;say('Got it. Once more.','ok');return}
-        VOICE.enroll(takes);say('Voice saved. Next time, say the phrase to get in.','ok');
+        takes.push(await VOICE.embed(await VOICE.record(4,body.querySelector('.am-wave'))));
+        if(takes.length<VOICE.takes){btn.textContent=`Record ${takes.length+1} of ${VOICE.takes}`;btn.disabled=false;say(takes.length===VOICE.takes-1?'Got it. Last one.':'Got it. Again.','ok');return}
+        const t=VOICE.enroll(takes);say(`Voice saved. You’ll need a ${Math.round(t*100)}% match to get in.`,'ok');
         setTimeout(()=>{closeLogin();enterEditor(login)},900);
       }catch(err){btn.disabled=false;say(err.quiet?'I couldn’t hear anything. Try again.':'Voice setup didn’t work here. You can skip it.','bad')}
     };
