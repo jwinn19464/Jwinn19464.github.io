@@ -1,7 +1,5 @@
 # Jenifer's World
 
-A personal portfolio site built with plain HTML, CSS and JavaScript. It has no framework and no build step. All the words, areas, memories and photos live in `content.json`, and a built-in visual editor changes that file for you.
-
 ## Files
 
 | File | What it holds |
