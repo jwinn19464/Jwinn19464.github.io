@@ -28,7 +28,7 @@
       },
       {
         "label": "Languages",
-        "value": "English, Spanish"
+        "value": "English, Spanish, Portuguese, Vietnamese"
       },
       {
         "label": "Based in",
@@ -507,7 +507,7 @@
   "footer": "Built by Jenifer Nguyen.",
   "admin": {
     "owner": "jwinn19464",
-    "repo": "",
+    "repo": "jwinn19464.github.io",
     "branch": "main"
   }
 }
