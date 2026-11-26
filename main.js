@@ -421,13 +421,20 @@
   /* App view: opens over the area, with Demo and Live tabs.
      A memory opens an app when it has "app" (a demo in DEMOS) or "live" (a key in content.live). */
   let current=null;
+  /* "Keyframes (Modules 3 + 6): text" -> a numbered step card with a title, a module chip and the text. */
+  const stepsHTML=list=>'<ol class="steps">'+list.map(l=>{
+    const m=/^([^:()]{1,40}?)\s*(?:\(([^)]{1,40})\))?:\s+([\s\S]+)$/.exec(l);
+    return m?`<li><div class="st-h"><b>${esc(m[1])}</b>${m[2]?`<span class="st-tag">${esc(m[2])}</span>`:''}</div><p>${esc(cap(m[3]))}</p></li>`:`<li><p>${esc(l)}</p></li>`;
+  }).join('')+'</ol>';
+  const liveBtn=(url,short)=>`<a class="livebtn" href="${esc(url)}" target="_blank" rel="noopener">${short?'Live app':'Open the live app'} <span aria-hidden="true">↗</span></a>`;
+  const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
   function openApp(root,d,onClose){
     const liveURL=d.live?(SITE.content.live||{})[d.live]:'';
     const showLive=!!(liveURL||(d.live&&document.body.classList.contains('editing')));
     const view=el(`<div class="appview" role="dialog" aria-label="${esc(d.title)}">
       <div class="apphead"><button class="arrow" data-close>Back to the area</button><h3>${esc(d.title)}</h3>
-        <div class="tabs" role="tablist">${d.app&&DEMOS[d.app]?'<button role="tab" data-tab="demo" aria-selected="true">Play the demo</button>':''}${showLive?`<button role="tab" data-tab="live" aria-selected="${d.app?'false':'true'}">Live app</button>`:''}</div></div>
-      <p class="appmeta">${esc(d.text)}</p>${d.list&&d.list.length?'<ul class="appmeta">'+d.list.map(l=>`<li>${esc(l)}</li>`).join('')+'</ul>':''}<div class="appbody"></div></div>`);
+        <div class="tabs" role="tablist">${d.app&&DEMOS[d.app]?'<button role="tab" data-tab="demo" aria-selected="true">Play the demo</button>':''}${liveURL?liveBtn(liveURL,true):showLive?`<button role="tab" data-tab="live" aria-selected="${d.app?'false':'true'}">Live app</button>`:''}</div></div>
+      <div class="appinfo"><p class="appmeta">${esc(d.text)}</p>${d.list&&d.list.length?`<details class="howto"><summary>How it works · ${d.list.length} steps</summary>${stepsHTML(d.list)}</details>`:''}</div><div class="appbody"></div></div>`);
     root.appendChild(view);
     const frameEl=root.closest('.mframe');frameEl.classList.add('app-open');
     const top=frameEl.getBoundingClientRect().top;if(top<56||top>innerHeight*.3)scrollTo({top:scrollY+top-60,behavior:reduce?'auto':'smooth'});
@@ -437,11 +444,10 @@
       view.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===tab)));
       if(tab==='demo'){current=DEMOS[d.app](body)||null;unlock('tinker')}
       else if(liveURL){
-        const u=/streamlit\.app/.test(liveURL)?liveURL+(liveURL.includes('?')?'&':'?')+'embed=true':liveURL;
-        body.innerHTML=`<iframe src="${esc(u)}" title="${esc(d.title)} live app" loading="lazy" allow="camera;clipboard-write"></iframe><p class="hint">Not loading? <a href="${esc(liveURL)}" target="_blank" rel="noopener">Open the app in a new tab</a>.</p>`;
+        body.innerHTML=`<div class="liveempty"><p><b>${esc(d.title)} runs as its own app.</b></p><p>It opens full screen in a new tab, so it fits your phone.</p><p>${liveBtn(liveURL)}</p></div>`;
       }else body.innerHTML=`<div class="liveempty"><p><b>The live app goes here.</b></p><p>Add its link in the editor under Settings → Live app links (“${esc(d.live)}”). Visitors don’t see this tab until it has a link.</p></div>`;
     }
-    view.addEventListener('click',e=>{if(e.target.closest('[data-close]')){close();return}const tb=e.target.closest('[data-tab]');if(tb)show(tb.dataset.tab)});
+    view.addEventListener('click',e=>{if(e.target.closest('[data-close]')){close();return}if(e.target.closest('.appinfo .appmeta')){e.target.closest('.appinfo').classList.toggle('open');return}const tb=e.target.closest('[data-tab]');if(tb)show(tb.dataset.tab)});
     view.addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.target.closest('canvas'))close()});
     function close(){current?.stop?.();current=null;view.remove();frameEl.classList.remove('app-open');onClose&&onClose()}
     show(d.app&&DEMOS[d.app]?'demo':'live');
@@ -476,24 +482,40 @@
   /* The world: Home Base plus one area per entry in content.areas */
   const root=document.getElementById('mframe');
   let cur='lobby',stopPortals=null,labelsRead=0;const seen=new Set();
-  const rooms=()=>{const c=SITE.content;return[{id:'lobby',home:true,color:c.world.homeColor,title:c.world.homeTitle,sub:c.world.homeSub},...c.areas]};
-  const doorHTML=(d,k)=>`<button class="door" data-go="${esc(d.id)}" data-index="${k}" style="--c:${esc(d.color)}"><span class="arch"><span class="pool"></span><canvas class="plasma" width="72" height="99" data-c="${esc(d.color)}"></canvas><canvas class="sparks" width="96" height="132"></canvas></span><span class="plaque">${esc(d.door)}</span></button>`;
-  const memoryHTML=(r,m,j)=>`<button class="exhibit ${m.app||m.live?'playable':''}" data-x="${j}" style="--c:${esc(r.color)}"><span class="fr" data-photo="${esc(m.photo||'')}">${svg(m.icon)}</span><span class="plaque">${esc(m.title)}</span></button>`;
+  /* Visibility: "public" (default) shows to everyone; "unlisted" only appears through its own link
+     (#m-<memory id> or #a-<area id>); "private" never reaches this file at all: the editor keeps it
+     in your private repository and merges it in only while you're signed in. */
+  const editing=()=>document.body.classList.contains('editing');
+  const revealed=new Set();SITE.revealed=revealed;
+  const vis=o=>(o&&o.visibility)||'public';
+  const shown=(o,id)=>editing()||vis(o)==='public'||(vis(o)==='unlisted'&&revealed.has(id));
+  const areaShown=a=>{
+    if(!shown(a,'a-'+a.id))return false;
+    if(editing()||a.type==='contact')return true;
+    return a.memories.some(m=>shown(m,'m-'+m.id))||revealed.has('a-'+a.id);
+  };
+  SITE.vis=vis;
+  /* Each room carries its real index in content.areas (k), so edits land on the right item */
+  const rooms=()=>{const c=SITE.content;return[{id:'lobby',home:true,color:c.world.homeColor,title:c.world.homeTitle,sub:c.world.homeSub,k:-1},...c.areas.map((a,k)=>({...a,k})).filter(areaShown)]};
+  const tag=o=>vis(o)==='public'?'':`<span class="vis-tag vis-${vis(o)}">${vis(o)==='private'?'Private':'Unlisted'}</span>`;
+  const doorHTML=d=>`<button class="door vis-${vis(d)}" data-go="${esc(d.id)}" data-index="${d.k}" style="--c:${esc(d.color)}">${tag(d)}<span class="arch"><span class="pool"></span><canvas class="plasma" width="72" height="99" data-c="${esc(d.color)}"></canvas><canvas class="sparks" width="96" height="132"></canvas></span><span class="plaque">${esc(d.door)}</span></button>`;
+  const memoryHTML=(r,m,j)=>`<button class="exhibit vis-${vis(m)} ${m.app||m.live?'playable':''}" data-x="${j}" data-id="${esc(m.id||'')}" style="--c:${esc(r.color)}">${tag(m)}<span class="fr" data-photo="${esc(m.photo||'')}">${svg(m.icon)}</span><span class="plaque">${esc(m.title)}</span></button>`;
   function contactHTML(){const c=SITE.content.contact,u=c.url;
     return `<div class="contact cut"><h2 data-edit="contact.heading"></h2><p data-edit="contact.text"></p><a class="btn" id="contactLink" href="${u?esc(u):'#world'}" ${u?'target="_blank" rel="noopener"':''} data-edit="contact.button"></a>${u?'':'<p class="todo edit-only">Add your LinkedIn link in Settings.</p>'}</div>`}
   function renderWorld(){
-    const c=SITE.content,list=rooms();
+    const list=rooms();
     if(!list.some(r=>r.id===cur))cur='lobby';
     stopPortals?.();
     root.innerHTML=list.map((r,i)=>{
-      const next=list[i+1],ai=i-1;
-      const wall=r.home?c.areas.map(doorHTML).join(''):r.type==='contact'?contactHTML():r.memories.map((m,j)=>memoryHTML(r,m,j)).join('');
+      const next=list[i+1],ai=r.k;
+      const items=r.memories?r.memories.map((m,j)=>[m,j]).filter(([m])=>shown(m,'m-'+m.id)):[];
+      const wall=r.home?list.slice(1).map(doorHTML).join(''):r.type==='contact'?contactHTML():items.map(([m,j])=>memoryHTML(r,m,j)).join('');
       return `<section class="mslide" data-room="${esc(r.id)}" data-area="${ai}" style="--area:${esc(r.color)}" ${r.id===cur?'':'hidden'} aria-label="${esc(r.title)}">
         <div class="mhead"><h3 data-edit="${r.home?'world.homeTitle':`areas.${ai}.title`}"></h3><p data-edit="${r.home?'world.homeSub':`areas.${ai}.sub`}"></p></div>
-        <div class="wall ${r.memories&&r.memories.length>6?'dense':''}" data-wall="${r.home?'home':r.type==='contact'?'contact':ai}">${wall}</div>
+        <div class="wall ${items.length>6?'dense':''}" data-wall="${r.home?'home':r.type==='contact'?'contact':ai}">${wall}</div>
         <div class="label" role="dialog" hidden></div>
         <div class="mnav">
-          <button class="arrow ${i?'':'hide'}" data-go="lobby">${esc(c.world.homeTitle)}</button>
+          <button class="arrow ${i?'':'hide'}" data-go="lobby">${esc(SITE.content.world.homeTitle)}</button>
           <span>${i?`AREA ${i} / ${list.length-1}`:''}</span>
           <button class="arrow fwd ${next&&i?'':'hide'}" data-go="${next?esc(next.id):''}">${next?esc(next.title.replace(/^The /,'')):''}</button>
         </div></section>`;
@@ -591,11 +613,13 @@
     const g=e.target.closest('[data-go]');if(g&&g.dataset.go){go(g.dataset.go);return}
     const x=e.target.closest('.exhibit');if(!x||document.body.classList.contains('editing'))return;
     const area=SITE.content.areas.find(r=>r.id===cur),d=area.memories[+x.dataset.x],lab=x.closest('.mslide').querySelector('.label');
-    if(d.app||(d.live&&SITE.content.live?.[d.live])){lab.hidden=true;openApp(x.closest('.mslide'),d,()=>x.focus({preventScroll:true}));return}
+    if(d.app&&DEMOS[d.app]){lab.hidden=true;openApp(x.closest('.mslide'),d,()=>x.focus({preventScroll:true}));return}
+    const liveURL=d.live?SITE.content.live?.[d.live]:'';
     const link=d.link&&d.link.text?(d.link.openArea?`<a href="#world" data-go-label="${esc(d.link.openArea)}">${esc(d.link.text)}</a>`:d.link.href?`<a href="${esc(d.link.href)}" target="_blank" rel="noopener">${esc(d.link.text)}</a>`:''):'';
     lab.innerHTML=`<button class="x" aria-label="Close">×</button><h4>${esc(d.title)}</h4>
       ${d.photo?`<img class="labimg" src="${esc(photoURL(d.photo))}" alt="">`:''}<div class="meta">${d.year?esc(d.year)+' · ':''}<i>${esc(d.tools)}</i></div><p>${esc(d.text)}</p>
-      ${d.list&&d.list.length?'<ul>'+d.list.map(l=>`<li>${esc(l)}</li>`).join('')+'</ul>':''}
+      ${d.list&&d.list.length?stepsHTML(d.list):''}
+      ${liveURL?`<p style="margin-top:10px">${liveBtn(liveURL)}</p>`:''}
       ${d.widget?'<div class="wbox"></div>':''}
       ${link?`<p style="margin-top:8px">${link}</p>`:''}`;
     lab.hidden=false;
@@ -604,6 +628,21 @@
     if(++labelsRead>=5)unlock('critic');
   });
   root.addEventListener('keydown',e=>{if(e.key==='Escape')root.querySelectorAll('.label').forEach(l=>l.hidden=true)});
+
+  /* Share links: #m-<memory id> opens that memory, #a-<area id> opens that area. Works for unlisted items too. */
+  function openFromHash(){
+    const h=decodeURIComponent(location.hash.slice(1));if(!/^[am]-/.test(h))return;
+    const c=SITE.content;let area=null,mi=-1;
+    if(h.startsWith('a-'))area=c.areas.find(a=>a.id===h.slice(2));
+    else c.areas.forEach(a=>{const j=(a.memories||[]).findIndex(m=>m.id===h.slice(2));if(j>=0){area=a;mi=j}});
+    if(!area||vis(area)==='private'||(mi>=0&&vis(area.memories[mi])==='private'))return;
+    revealed.add('a-'+area.id);if(mi>=0)revealed.add(h);
+    renderWorld();
+    document.getElementById('world').scrollIntoView({behavior:'auto'});
+    go(area.id);
+    if(mi>=0)setTimeout(()=>root.querySelector(`[data-room="${CSS.escape(area.id)}"] .exhibit[data-x="${mi}"]`)?.click(),reduce?0:480);
+  }
+  SITE.openFromHash=openFromHash;
 
   /* Load content.json, then draw everything */
   (async function boot(){
@@ -616,6 +655,8 @@
       return;
     }
     renderAll();
+    openFromHash();
+    addEventListener('hashchange',openFromHash);
     document.dispatchEvent(new CustomEvent('site:ready'));
   })();
 

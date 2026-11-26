@@ -289,7 +289,7 @@ body.editing .edit-only{display:block}
 .am-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
 .am-form{display:grid;gap:10px}
 .am-form label,.drawer label{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--text2)}
-.am-form input:not([type=checkbox]),.drawer input:not([type=checkbox]):not([type=color]),.drawer textarea,.drawer select{font:inherit;font-weight:400;font-size:15px;color:var(--text);background:var(--card-solid);border:1px solid var(--line-strong);border-radius:4px;padding:8px 10px;width:100%}
+.am-form input:not([type=checkbox]),.drawer input:not([type=checkbox]):not([type=color]):not([type=radio]),.drawer textarea,.drawer select{font:inherit;font-weight:400;font-size:15px;color:var(--text);background:var(--card-solid);border:1px solid var(--line-strong);border-radius:4px;padding:8px 10px;width:100%}
 .am-form .am-check{display:flex;align-items:center;gap:8px;font-weight:400}
 .am-status{min-height:1.5em;font-size:14px;margin-top:10px;color:var(--text2)}
 .am-status[data-kind="ok"]{color:var(--mint)}
@@ -339,3 +339,47 @@ body.editing .portrait{cursor:pointer;outline:2px dashed var(--mint);outline-off
   .eb-status{position:absolute;left:0;right:0;bottom:100%;margin:0 0 6px;text-align:center;font-size:12px;background:var(--pop);border:1px solid var(--line);padding:2px 8px;justify-self:center;width:max-content;max-width:100%;left:50%;transform:translateX(-50%)}
   .handle{width:34px;height:34px}
 }
+
+/* ===== Visibility ===== */
+.vis-tag{display:none}
+body.editing .vis-tag{display:block;position:absolute;right:-6px;top:-10px;z-index:3;font-family:var(--hud);font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:1px 7px;border-radius:3px;background:var(--pop);border:1px solid var(--line-strong);color:var(--text)}
+body.editing .vis-tag.vis-private{border-color:var(--pink);color:var(--pink)}
+body.editing .vis-tag.vis-unlisted{border-color:var(--gold);color:var(--gold)}
+body.editing .exhibit.vis-unlisted .fr,body.editing .door.vis-unlisted .arch{opacity:.6}
+body.editing .exhibit.vis-private .fr,body.editing .door.vis-private .arch{opacity:.45;filter:grayscale(.4)}
+.vis-field{gap:6px}
+.vis-opt{display:flex !important;grid-template-columns:none;align-items:flex-start;gap:8px;font-weight:400 !important;padding:6px 8px;border:1px solid var(--line);border-radius:4px;cursor:pointer}
+.vis-opt:has(input:checked){border-color:var(--mint);background:color-mix(in srgb,var(--mint) 10%,transparent)}
+.vis-opt.disabled{opacity:.5;cursor:not-allowed}
+.vis-opt input{margin-top:3px}
+.vis-opt span{display:grid;gap:1px}
+.vis-opt b{font-size:14px;color:var(--text)}
+.vis-opt small{font-size:12px;color:var(--muted)}
+.vis-link{display:flex;gap:6px}
+.vis-link[hidden]{display:none}
+.vis-link input{flex:1;min-width:0;font-size:13px !important}
+.drawer code{font-size:12px;background:var(--card2);padding:0 4px;border-radius:3px}
+
+/* Step cards for memories with a "how it works" list */
+ol.steps{list-style:none;counter-reset:st;margin:10px 0 0;padding:0;display:grid;gap:8px}
+ol.steps li{counter-increment:st;position:relative;background:var(--card2);border:1px solid var(--line);padding:9px 12px 9px 44px;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
+ol.steps li::before{content:counter(st);position:absolute;left:10px;top:9px;width:24px;height:24px;display:grid;place-items:center;
+  background:var(--btn-bg);color:var(--btn-ink);font-family:var(--hud);font-weight:700;font-size:13px;border-radius:50%}
+.st-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.st-h b{font-family:var(--hud);font-weight:700;font-size:15px;color:var(--text)}
+.st-tag{font-family:var(--hud);font-weight:600;font-size:12px;color:var(--mint);border:1px solid var(--line-strong);padding:0 6px;border-radius:3px;white-space:nowrap}
+ol.steps p{margin:3px 0 0;font-size:14px;line-height:1.5;color:var(--text2)}
+.label ol.steps li{padding:8px 10px 8px 40px}
+.label ol.steps li::before{left:8px;top:8px}
+/* App view: short intro, steps tucked away, live app as a button */
+.appinfo{max-width:92ch}
+.appinfo .appmeta{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.appinfo.open .appmeta,.appinfo:has(details[open]) .appmeta{display:block}
+.appinfo .appmeta{cursor:pointer}
+details.howto{margin-top:6px}
+details.howto summary{cursor:pointer;font-family:var(--hud);font-weight:700;font-size:14px;color:var(--mint);min-height:32px;display:flex;align-items:center;gap:6px}
+details.howto[open] summary{margin-bottom:2px}
+.livebtn{display:inline-flex;white-space:nowrap;flex:none;align-items:center;gap:6px;background:var(--btn-bg);color:var(--btn-ink)!important;font-family:var(--hud);font-weight:700;font-size:14px;
+  padding:6px 16px;text-decoration:none;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+.livebtn:focus-visible{outline:3px solid var(--mint);outline-offset:2px}
