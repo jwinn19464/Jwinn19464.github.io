@@ -498,11 +498,11 @@
     "url": ""
   },
   "live": {
-    "portal": "",
+    "portal": "https://jenifer-cv-work.streamlit.app/",
     "dealdish": "",
     "derivativelab": "",
     "platformer": "",
-    "fridge": ""
+    "fridge": "https://jenifer-cv-work.streamlit.app/Fridge_Oracle"
   },
   "footer": "Built by Jenifer Nguyen.",
   "admin": {
